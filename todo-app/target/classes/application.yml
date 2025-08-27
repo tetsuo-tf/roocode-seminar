@@ -1,0 +1,123 @@
+spring:
+  application:
+    name: todo-app
+
+  # データベース設定
+  datasource:
+    url: jdbc:postgresql://localhost:5432/todoapp
+    username: todouser
+    password: todopass
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+
+  # JPA/Hibernate設定
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        use_sql_comments: true
+    open-in-view: false
+
+  # Thymeleaf設定
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+
+  # セキュリティ設定
+  security:
+    user:
+      name: admin
+      password: admin
+      roles: ADMIN
+
+  # 開発ツール設定
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+# サーバー設定
+server:
+  port: 8090
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+# ログ設定
+logging:
+  level:
+    com.example.todoapp: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# アプリケーション固有設定
+app:
+  name: "ToDo Application"
+  version: "1.0.0"
+  description: "Spring Boot ToDo Application with Material Design"
+  pagination:
+    default-page-size: 10
+    max-page-size: 100
+
+---
+# テスト環境設定
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  h2:
+    console:
+      enabled: true
+
+---
+# 本番環境設定
+spring:
+  config:
+    activate:
+      on-profile: prod
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  thymeleaf:
+    cache: true
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+
+logging:
+  level:
+    com.example.todoapp: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${isEdit ? 'ToDo編集' : 'ToDo作成'} + ' - ToDo App'">ToDo作成 - ToDo App</title>
+
+    <!-- Material Design Lite CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <!-- Header -->
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <span class="mdl-layout-title">
+                    <a th:href="@{/todos}" class="header-title">
+                        <i class="material-icons">check_circle</i>
+                        ToDo App
+                    </a>
+                </span>
+                <div class="mdl-layout-spacer"></div>
+                <nav class="mdl-navigation mdl-layout--large-screen-only">
+                    <span class="mdl-navigation__link user-info">
+                        <i class="material-icons">person</i>
+                        <span sec:authentication="principal.name">ユーザー名</span>
+                    </span>
+                    <a class="mdl-navigation__link" th:href="@{/todos}">
+                        <i class="material-icons">list</i>
+                        ToDo一覧
+                    </a>
+                    <a class="mdl-navigation__link" th:href="@{/todos/overdue}">
+                        <i class="material-icons">warning</i>
+                        期限切れ
+                    </a>
+                    <form th:action="@{/logout}" method="post" style="display: inline;">
+                        <button type="submit" class="mdl-button mdl-js-button mdl-button--icon logout-btn">
+                            <i class="material-icons">exit_to_app</i>
+                        </button>
+                    </form>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Drawer for mobile -->
+        <div class="mdl-layout__drawer">
+            <span class="mdl-layout-title">
+                <i class="material-icons">check_circle</i>
+                ToDo App
+            </span>
+            <nav class="mdl-navigation">
+                <div class="user-info-drawer">
+                    <i class="material-icons">person</i>
+                    <span sec:authentication="principal.name">ユーザー名</span>
+                </div>
+                <a class="mdl-navigation__link" th:href="@{/todos}">
+                    <i class="material-icons">list</i>
+                    ToDo一覧
+                </a>
+                <a class="mdl-navigation__link" th:href="@{/todos/new}">
+                    <i class="material-icons">add</i>
+                    新規作成
+                </a>
+                <a class="mdl-navigation__link" th:href="@{/todos/overdue}">
+                    <i class="material-icons">warning</i>
+                    期限切れ
+                </a>
+                <div class="mdl-layout-spacer"></div>
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored logout-btn-drawer">
+                        <i class="material-icons">exit_to_app</i>
+                        ログアウト
+                    </button>
+                </form>
+            </nav>
+        </div>
+
+        <!-- Main content -->
+        <main class="mdl-layout__content">
+            <div class="page-content">
+                <!-- Flash messages -->
+                <div th:if="${errorMessage}" class="mdl-card mdl-shadow--2dp message-card error-message">
+                    <div class="mdl-card__supporting-text">
+                        <i class="material-icons">error</i>
+                        <span th:text="${errorMessage}">エラーメッセージ</span>
+                    </div>
+                </div>
+
+                <!-- Breadcrumb -->
+                <div style="margin-bottom: 24px;">
+                    <nav>
+                        <a th:href="@{/todos}" class="mdl-button mdl-js-button">
+                            <i class="material-icons">arrow_back</i>
+                            ToDo一覧に戻る
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Form Container -->
+                <div class="form-container">
+                    <div class="mdl-card mdl-shadow--4dp form-card">
+                        <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
+                            <h2 class="mdl-card__title-text">
+                                <i class="material-icons" th:text="${isEdit ? 'edit' : 'add'}">add</i>
+                                <span th:text="${isEdit ? 'ToDo編集' : 'ToDo作成'}">ToDo作成</span>
+                            </h2>
+                        </div>
+
+                        <div class="mdl-card__supporting-text">
+                            <form th:action="${isEdit ? '/todos/' + todo.id : '/todos'}"
+                                  method="post"
+                                  th:object="${todo}"
+                                  id="todoForm">
+
+                                <!-- Hidden field for edit mode -->
+                                <input th:if="${isEdit}" type="hidden" th:field="*{id}">
+
+                                <!-- Title field -->
+                                <div class="form-field">
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                                         th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
+                                        <input class="mdl-textfield__input"
+                                               type="text"
+                                               id="title"
+                                               th:field="*{title}"
+                                               required
+                                               maxlength="200">
+                                        <label class="mdl-textfield__label" for="title">
+                                            <i class="material-icons">title</i>
+                                            タイトル *
+                                        </label>
+                                        <span class="mdl-textfield__error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">タイトルエラー</span>
+                                        <span class="mdl-textfield__error" th:unless="${#fields.hasErrors('title')}">タイトルは必須です（200文字以内）</span>
+                                    </div>
+                                </div>
+
+                                <!-- Description field -->
+                                <div class="form-field">
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                                         th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'">
+                                        <textarea class="mdl-textfield__input"
+                                                  id="description"
+                                                  th:field="*{description}"
+                                                  rows="4"
+                                                  maxlength="1000"></textarea>
+                                        <label class="mdl-textfield__label" for="description">
+                                            <i class="material-icons">description</i>
+                                            詳細説明（オプション）
+                                        </label>
+                                        <span class="mdl-textfield__error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">詳細エラー</span>
+                                        <span class="mdl-textfield__error" th:unless="${#fields.hasErrors('description')}">詳細は1000文字以内で入力してください</span>
+                                    </div>
+                                    <div class="mdl-textfield__help-text">
+                                        ToDoの詳細な説明や備考を入力できます
+                                    </div>
+                                </div>
+
+                                <!-- Due date field -->
+                                <div class="form-field">
+                                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                                         th:classappend="${#fields.hasErrors('dueDate') or dueDateError != null} ? 'is-invalid'">
+                                        <input class="mdl-textfield__input"
+                                               type="date"
+                                               id="dueDate"
+                                               th:field="*{dueDate}">
+                                        <label class="mdl-textfield__label" for="dueDate">
+                                            <i class="material-icons">schedule</i>
+                                            期限日（オプション）
+                                        </label>
+                                        <span class="mdl-textfield__error" th:if="${dueDateError}" th:text="${dueDateError}">期限日エラー</span>
+                                        <span class="mdl-textfield__error" th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}">期限日エラー</span>
+                                        <span class="mdl-textfield__error" th:unless="${#fields.hasErrors('dueDate') or dueDateError != null}">期限日は今日以降の日付を設定してください</span>
+                                    </div>
+                                    <div class="mdl-textfield__help-text">
+                                        期限日を設定すると、期限が近づいた際に通知されます
+                                    </div>
+                                </div>
+
+                                <!-- Completion status (edit mode only) -->
+                                <div th:if="${isEdit}" class="form-field">
+                                    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="completed">
+                                        <input type="checkbox"
+                                               id="completed"
+                                               th:field="*{completed}"
+                                               class="mdl-checkbox__input">
+                                        <span class="mdl-checkbox__label">
+                                            <i class="material-icons">check_circle</i>
+                                            完了済み
+                                        </span>
+                                    </label>
+                                </div>
+
+                                <!-- Form Actions -->
+                                <div class="form-actions">
+                                    <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored btn-primary">
+                                        <i class="material-icons" th:text="${isEdit ? 'save' : 'add'}">save</i>
+                                        <span th:text="${isEdit ? '更新' : '作成'}">作成</span>
+                                    </button>
+
+                                    <a th:href="@{/todos}" class="mdl-button mdl-js-button">
+                                        <i class="material-icons">cancel</i>
+                                        キャンセル
+                                    </a>
+
+                                    <div th:if="${isEdit}" style="margin-left: auto;">
+                                        <form th:action="@{/todos/{id}/delete(id=${todo.id})}" method="post" style="display: inline;">
+                                            <button type="submit"
+                                                    class="mdl-button mdl-js-button mdl-button--raised btn-danger"
+                                                    data-confirm="このToDoを削除しますか？削除すると元に戻せません。">
+                                                <i class="material-icons">delete</i>
+                                                削除
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Tips Card -->
+                    <div class="mdl-card mdl-shadow--2dp" style="margin-top: 24px;">
+                        <div class="mdl-card__title">
+                            <h3 class="mdl-card__title-text">
+                                <i class="material-icons">lightbulb_outline</i>
+                                ヒント
+                            </h3>
+                        </div>
+                        <div class="mdl-card__supporting-text">
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <li>タイトルは分かりやすく具体的に記入しましょう</li>
+                                <li>期限日を設定すると、期限が近づいた際に一覧画面で強調表示されます</li>
+                                <li>詳細説明には、ToDoの背景や手順などを記録できます</li>
+                                <li th:if="${isEdit}">完了済みにチェックを入れると、ToDoが完了状態になります</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="mdl-mini-footer">
+                <div class="mdl-mini-footer__left-section">
+                    <div class="mdl-logo">ToDo App</div>
+                    <ul class="mdl-mini-footer__link-list">
+                        <li><span>&copy; 2024 ToDo App Team</span></li>
+                        <li><span>Spring Boot 3.5.3</span></li>
+                        <li><span>Material Design Lite</span></li>
+                    </ul>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Material Design Lite JavaScript -->
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script th:src="@{/js/app.js}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Focus on title field when page loads
+            const titleField = document.getElementById('title');
+            if (titleField && !titleField.value) {
+                titleField.focus();
+            }
+
+            // Character counter for description
+            const descriptionField = document.getElementById('description');
+            if (descriptionField) {
+                const maxLength = 1000;
+                const counterElement = document.createElement('div');
+                counterElement.className = 'character-counter';
+                counterElement.style.cssText = 'text-align: right; font-size: 0.8em; color: #666; margin-top: 4px;';
+
+                function updateCounter() {
+                    const remaining = maxLength - descriptionField.value.length;
+                    counterElement.textContent = `${descriptionField.value.length} / ${maxLength}`;
+                    counterElement.style.color = remaining < 100 ? '#f44336' : '#666';
+                }
+
+                descriptionField.addEventListener('input', updateCounter);
+                descriptionField.parentNode.appendChild(counterElement);
+                updateCounter();
+            }
+
+            // Set minimum date for due date field
+            const dueDateField = document.getElementById('dueDate');
+            if (dueDateField) {
+                const today = new Date().toISOString().split('T')[0];
+                dueDateField.setAttribute('min', today);
+            }
+        });
+    </script>
+</body>
+</html>
