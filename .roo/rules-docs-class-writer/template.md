@@ -11,9 +11,9 @@
 - 非責務（やらないこと）:
 
 ## 2. 公開API（メソッド一覧）
-| 可視性 | シグネチャ | 入力 | 出力 | 例外 | 前提/事後条件 | 計算量 | スレッド安全性 |
+| 可視性 | シグネチャ | 入力 | 出力 | 例外 | 前提/事後条件 | スレッド安全性 |
 |---|---|---|---|---|---|---|---|
-| public | `User findById(Long id)` | `id: Long` | `User` | `NotFoundException` | id≠null / ユーザ存在 | O(1) | 不変 |
+| public | `User findById(Long id)` | `id: Long` | `User` | `NotFoundException` | id≠null / ユーザ存在 | 不変 |
 
 （必要行だけ増やす。内部メソッドは別表でも可）
 
