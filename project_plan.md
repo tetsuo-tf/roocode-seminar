@@ -12,6 +12,45 @@
 - Docker Compose（開発環境）
 - Maven（ビルドツール）
 
+## 📦 GitHubリポジトリ情報
+
+**リポジトリURL**: https://github.com/tetsuo-tf/roocode-seminar.git
+
+**ブランチ戦略**:
+- `main` - メインブランチ（本番環境対応）
+- `feature/*` - 機能開発ブランチ
+- `fix/*` - バグ修正ブランチ
+- `hotfix/*` - 緊急修正ブランチ
+
+**現在のブランチ状況**:
+- `main` - メインブランチ（最新）
+- `feature/add-readme` - README追加機能
+- `feature/add_docs_class_writer` - ドキュメントクラス作成機能
+- `feature/add_todo_test` - ToDoテスト追加機能
+- `feature/debug_due_screen` - 期限画面デバッグ機能
+
+**クローン方法**:
+```bash
+git clone https://github.com/tetsuo-tf/roocode-seminar.git
+cd roocode-seminar/todo-app
+```
+
+**開発環境セットアップ**:
+```bash
+# リポジトリクローン
+git clone https://github.com/tetsuo-tf/roocode-seminar.git
+cd roocode-seminar
+
+# ToDoアプリディレクトリに移動
+cd todo-app
+
+# Docker環境起動
+docker-compose up -d
+
+# アプリケーション起動
+./mvnw spring-boot:run
+```
+
 ## 🏗️ システム設計
 
 ### データベース設計
