@@ -8,7 +8,7 @@ Spring Boot 3.5.3とMaterial Design Liteを使用したモダンなToDoアプリ
 
 ## 🛠️ 技術スタック
 
-- **Backend**: Java 17 + Spring Boot 3.5.3
+- **Backend**: Java 21 + Spring Boot 3.5.3
 - **Security**: Spring Security 6.x
 - **Database**: PostgreSQL 15+ (開発環境はDocker Compose)
 - **ORM**: Spring Data JPA
@@ -20,7 +20,7 @@ Spring Boot 3.5.3とMaterial Design Liteを使用したモダンなToDoアプリ
 ## 📦 必要な環境・依存関係
 
 ### 前提条件
-- Java 17以上
+- Java 21以上
 - Maven 3.6以上
 - Docker & Docker Compose
 
