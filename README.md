@@ -116,8 +116,16 @@ todo-app/
 - **Host**: localhost
 - **Port**: 5432
 - **Database**: todoapp
-- **Username**: todouser
-- **Password**: todopass
+
+> **セキュリティ注意**: データベースのユーザ名とパスワードは環境変数で管理してください。
+>
+> 環境変数の設定例：
+> ```bash
+> export DB_USERNAME=your_username
+> export DB_PASSWORD=your_password
+> ```
+>
+> または、`application-local.yml`ファイルを作成して設定することも可能です（このファイルは`.gitignore`に追加してください）。
 
 ### 開発用ツール
 - Spring Boot DevTools（ホットリロード）
