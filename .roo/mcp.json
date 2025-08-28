@@ -8,7 +8,9 @@
       ],
       "env": {
         "DEFAULT_MINIMUM_TOKENS": ""
-      }
+      },
+      "disabled": true,
+      "alwaysAllow": []
     },
     "serena": {
       "command": "uvx",
@@ -23,7 +25,8 @@
       "alwaysAllow": [
         "get_symbols_overview",
         "list_dir"
-      ]
+      ],
+      "disabled": true
     }
   }
 }
