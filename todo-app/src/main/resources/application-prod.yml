@@ -1,0 +1,54 @@
+# 本番環境設定（PostgreSQL使用）
+spring:
+  # データベース設定（PostgreSQL）
+  datasource:
+    url: jdbc:postgresql://localhost:5432/todoapp
+    username: todouser
+    password: todopass
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+
+  # JPA/Hibernate設定
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: false
+        use_sql_comments: false
+    open-in-view: false
+
+  # Thymeleaf設定（本番環境）
+  thymeleaf:
+    cache: true
+
+  # セキュリティ設定
+  security:
+    user:
+      name: admin
+      password: admin
+      roles: ADMIN
+
+  # 開発ツール設定（本番環境では無効）
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+
+# ログ設定（本番環境）
+logging:
+  level:
+    com.example.todoapp: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

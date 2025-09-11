@@ -1,0 +1,63 @@
+# 開発環境設定（H2使用）
+spring:
+  # データベース設定（H2ファイルベース）
+  datasource:
+    url: jdbc:h2:file:./data/todoapp;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+
+  # JPA/Hibernate設定
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+        use_sql_comments: true
+    open-in-view: false
+
+  # H2コンソール設定
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+
+  # Thymeleaf設定（開発環境）
+  thymeleaf:
+    cache: false
+
+  # セキュリティ設定
+  security:
+    user:
+      name: admin
+      password: admin
+      roles: ADMIN
+
+  # 開発ツール設定
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+# ログ設定（開発環境）
+logging:
+  level:
+    com.example.todoapp: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
