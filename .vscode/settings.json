@@ -1,4 +1,6 @@
 {
   "java.configuration.updateBuildConfiguration": "interactive",
-  "java.compile.nullAnalysis.mode": "automatic"
+  "java.compile.nullAnalysis.mode": "automatic",
+  "spring-boot.ls.problem.application-yaml.YAML_SHOULD_ESCAPE": "IGNORE",
+  "spring-boot.ls.problem.application-yaml.YAML_UNKNOWN_PROPERTY": "IGNORE"
 }
