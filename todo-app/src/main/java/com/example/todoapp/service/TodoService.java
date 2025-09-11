@@ -239,7 +239,7 @@ public class TodoService {
             return new TodoStatistics(totalCount, completedCount, incompleteCount, overdueCount);
         } catch (Exception e) {
             // エラーが発生した場合はデフォルト値を返す
-            return new TodoStatistics(0, 0, 0, 0);
+            return TodoStatistics.EMPTY;
         }
     }
 
@@ -267,6 +267,11 @@ public class TodoService {
      * ToDo統計情報クラス
      */
     public static class TodoStatistics {
+        /**
+         * 全ての値が0の空の統計情報
+         */
+        public static final TodoStatistics EMPTY = new TodoStatistics(0, 0, 0, 0);
+
         private final long totalCount;
         private final long completedCount;
         private final long incompleteCount;
