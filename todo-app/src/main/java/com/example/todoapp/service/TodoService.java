@@ -244,26 +244,6 @@ public class TodoService {
     }
 
     /**
-     * オブジェクトをlong型に安全に変換
-     */
-    private long convertToLong(Object value) {
-        if (value == null) {
-            return 0L;
-        }
-        if (value instanceof Number) {
-            return ((Number) value).longValue();
-        }
-        if (value instanceof String) {
-            try {
-                return Long.parseLong((String) value);
-            } catch (NumberFormatException e) {
-                return 0L;
-            }
-        }
-        return 0L;
-    }
-
-    /**
      * ToDo統計情報クラス
      */
     public static class TodoStatistics {

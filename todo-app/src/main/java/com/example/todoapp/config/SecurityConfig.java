@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Spring Security設定クラス
@@ -101,7 +100,9 @@ public class SecurityConfig {
                     "/home",
                     "/register",
                     "/login",
-                    "/error"
+                    "/error",
+                    "/api/health/**",
+                    "/actuator/health"
                 ).permitAll()
                 // H2コンソール（開発環境のみ）
                 .requestMatchers("/h2-console/**").permitAll()
