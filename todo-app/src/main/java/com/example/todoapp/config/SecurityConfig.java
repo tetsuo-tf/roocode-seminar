@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,20 +40,9 @@ public class SecurityConfig {
     }
 
     /**
-     * 認証プロバイダーの設定
-     *
-     * @return DaoAuthenticationProvider
-     */
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
-
-    /**
      * 認証マネージャーの設定
+     * Spring Security 6.x では AuthenticationConfiguration を使用して
+     * UserDetailsService と PasswordEncoder を自動的に設定
      *
      * @param config 認証設定
      * @return AuthenticationManager
@@ -88,6 +76,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .userDetailsService(userDetailsService)
             .authorizeHttpRequests(authz -> authz
                 // 静的リソースとパブリックページは認証不要
                 .requestMatchers(
