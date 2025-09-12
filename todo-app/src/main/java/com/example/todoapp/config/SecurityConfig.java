@@ -77,6 +77,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .userDetailsService(userDetailsService)
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/h2-console/**")
+            )
             .authorizeHttpRequests(authz -> authz
                 // 静的リソースとパブリックページは認証不要
                 .requestMatchers(
@@ -95,8 +98,8 @@ public class SecurityConfig {
                 ).permitAll()
                 // H2コンソール（開発環境のみ）
                 .requestMatchers("/h2-console/**").permitAll()
-                // その他のリクエストは認証が必要
-                .anyRequest().authenticated()
+                // その他のリクエストはエラー
+                .anyRequest().denyAll()
             )
             .formLogin(form -> form
                 .loginPage("/login")
@@ -125,9 +128,7 @@ public class SecurityConfig {
                 .tokenValiditySeconds(86400) // 24時間
                 .userDetailsService(userDetailsService)
             )
-            .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/h2-console/**")
-            )
+
             .headers(headers -> headers
                 .frameOptions(frameOptions -> frameOptions.sameOrigin()) // H2コンソール用
             );
