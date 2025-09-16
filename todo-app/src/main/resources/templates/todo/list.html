@@ -331,7 +331,7 @@
           <div th:if="${todoPage != null and todoPage.totalPages > 1}" class="pagination-container">
             <div class="pagination-info">
               <span
-                th:text="|${todoPage.number * todoPage.size + 1} - ${todoPage.number * todoPage.size + todoPage.numberOfElements} / ${todoPage.totalElements} 件|"
+                th:text="|${todoPage.number * todoPage.size + 2} - ${todoPage.number * todoPage.size + todoPage.numberOfElements} / ${todoPage.totalElements} 件|"
                 >1-10 / 100 件</span
               >
             </div>
